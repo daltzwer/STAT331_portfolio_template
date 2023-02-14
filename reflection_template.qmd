@@ -49,12 +49,13 @@ avocado <- read_csv(here("Week 4", "Labs", "avocado.csv"))
 -   numeric
 
 ```{r wd-3-numeric}
-
+ filter( age < 20)
 ```
 
 -   character -- specifically a string
 
 ```{r wd-3-string}
+ filter( ethnic1 == "non-white", sex == "Female") 
 
 ```
 
@@ -81,13 +82,13 @@ avocado <- read_csv(here("Week 4", "Labs", "avocado.csv"))
 -   character -- specifically a string
 
 ```{r wd-4-string}
-
+mutate(ethnic1 = if_else(ethnic == "white", "white", "non-white"))
 ```
 
 -   factor
 
 ```{r wd-4-factor}
-
+ mutate(genus = fct_reorder(genus , weight, mean)
 ```
 
 -   date
