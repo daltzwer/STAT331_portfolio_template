@@ -11,7 +11,7 @@ execute:
   echo: true
 ---
 
-[**My Grade:**]{.underline} I believe my grade equivalent to course work evidenced below to be an \_\_.
+[**My Grade:**]{.underline} I believe my grade equivalent to course work evidenced below to be a B-. So far in our quarter, I feel I have already improved so much on my coding skills and have felt quite proud of what I have been able to accomplish thus far. However, I also recognize that my current skill set and programming knowledge is not up to par to an A oreven a solid B yet based on the grading guidelines we developed in class.
 
 [**Learning Objective Evidence:**]{.underline} In the code chunks below, provide code from a Lab or Challenge assignment where you believe you have demonstrated proficiency with the specified learning target. Be sure to specify **where** the code came from (e.g., Lab 4 Question 2).
 
@@ -22,7 +22,8 @@ execute:
 -   `csv`
 
 ```{r wd-1-csv}
-hello
+avocado <- read_csv(here("Week 4", "Labs", "avocado.csv"))
+
 ```
 
 -   `xlsx`
@@ -112,7 +113,7 @@ hello
 -   `inner_join()`
 
 ```{r wd-5-inner}
-
+ inner_join(avocado_metro, by = "region")
 ```
 
 -   `full_join()`
@@ -140,12 +141,17 @@ hello
 -   `pivot_longer()`
 
 ```{r wd-7-long}
+ pivot_longer(cols = (Smalls:ExtraLarges),
+               names_to = "Avocado Size", 
+               values_to = "Amntsld")
 
 ```
 
 -   `pivot_wider()`
 
 ```{r wd-7-wide}
+ pivot_wider(names_from = type,
+              values_from = AvocadoPrice)
 
 ```
 
