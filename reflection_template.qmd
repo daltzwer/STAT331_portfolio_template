@@ -1,6 +1,6 @@
 ---
 title: "STAT 331 Portfolio"
-author: "Papi Daltz"
+author: "Daltzwer Oliveros"
 format: 
   html: 
     self-contained: true
