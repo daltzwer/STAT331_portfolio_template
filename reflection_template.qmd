@@ -11,7 +11,7 @@ execute:
   echo: true
 ---
 
-[**My Grade:**]{.underline} I believe my grade equivalent to course work evidenced below to be a C+ to a B-. So far in our quarter, I feel I have already improved so much on my coding skills and have felt quite proud of what I have been able to accomplish thus far. However, I also recognize that my current skill set and programming knowledge is not up to par to an A oreven a solid B yet based on the grading guidelines we developed in class.
+[**My Grade:**]{.underline} I believe my grade equivalent to course work evidenced below to be a C+ to a B-. So far in our quarter, I feel I have already improved so much on my coding skills and have felt quite proud of what I have been able to accomplish thus far. However, I also recognize that my current skill set and programming knowledge is not up to par to an A or even a solid B yet based on the grading guidelines we developed in class.
 
 [**Learning Objective Evidence:**]{.underline} In the code chunks below, provide code from a Lab or Challenge assignment where you believe you have demonstrated proficiency with the specified learning target. Be sure to specify **where** the code came from (e.g., Lab 4 Question 2).
 
@@ -104,10 +104,11 @@ nw_women_fam|>
 
 ```
 
--   date
+-   date Practice Activity Question 3
 
 ```{r wd-3-date}
-
+suspects_ <- suspects |>
+  filter(Time.Spotted %within% within_thanks)
 ```
 
 **WD-4: I can modify existing variables and create new variables in a dataframe for a *variety* of data types (e.g., numeric, integer, character, factor, date).**
@@ -142,10 +143,13 @@ ggplot(data = AverageWeight2,
        color = "Genus of Rodent")
 ```
 
--   date
+-   date Practice Activity Question 1
 
 ```{r wd-4-date}
-
+suspects <- suspects |>
+  mutate(Time.Spotted = ymd_hms(Time.Spotted),
+         Time.Spotted = force_tz(Time.Spotted, tzone = "America/Los_Angeles")
+         )
 ```
 
 **WD-5: I can use mutating joins to combine multiple dataframes.**
@@ -183,7 +187,7 @@ ggplot(data = AverageWeight2,
 
 ```
 
--   `full_join()`
+-   `full_join()` Preview Activity 11 Question 2
 
 ```{r wd-5-full}
 
@@ -605,9 +609,13 @@ str(hiphop_clean)
 
 <!-- How did you revise your thinking throughout the course? How did you revise your thinking on the code examples you have provided in your portfolio? -->
 
+So far in our class, I have done most of the revisions that I have been allowed to do. I also believe that I have incorporated most of the feedback I have received into my future projects in hopes of applying the new skill I just learned. One opportunity I believe I have is that I am not consistent enough in applying some of the feedback I have received. This is often due to me rushing to make our deadline and forgetting to double check my work before submitting. With a little more repetition and finding a way to be more efficient, I believe I can further improve upon this opportunity before the quarter ends. As the quarter progressed, I believed I have showcased a better understanding of coding and what it takes to write tidy and efficient code.
+
 ## Extending My Thinking
 
 <!-- How did you extended your thinking throughout the course? How did you extend your thinking on the code examples you have provided in your portfolio? -->
+
+This is where I believe my greatest opportunity lies. Thus far, I rarely go above and beyond due to a fear of messing up my whole project entirely. With a very limited background in computer programming, I am under the misconception that I do not currently have the skill set to be able to go above and beyond in our labs and challenges. I do, however, often research possible solutions to my problems and cite it appropriately in my projects. I also regularly go to tutoring hours in hopes of improving on the efficiency of my code and my overall understanding of the concepts we are learning in class. Additionally, I try to incorporate what we learned from our previous labs into our current projects.
 
 ## Peer Support & Collaboration
 
