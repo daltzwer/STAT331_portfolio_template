@@ -19,23 +19,34 @@ execute:
 
 **WD-1: I can import data from a *variety* of formats (e.g., csv, xlsx, txt, etc.).**
 
--   `csv`
+-   `csv` Lab 4
 
 ```{r wd-1-csv}
 avocado <- read_csv(here("Week 4", "Labs", "avocado.csv"))
 
 ```
 
--   `xlsx`
+-   `xlsx` Practice Activity 4
 
 ```{r wd-1-xlsx}
+library(readxl) 
+library(tidyverse)
+
+military <- read_xlsx(here::here("data", 
+                                 "gov_spending_per_capita.xlsx"), 
+                      sheet = "Share of Govt. spending"  , 
+                      skip = 6, 
+                      n_max = 186 )
 
 ```
 
--   `txt`
+-   `txt` Practice Activity 5.2
 
 ```{r wd-1-txt}
-
+message <- read_csv(here::here( 
+                                 "data", 
+                                 "scrambled_message.txt")
+                      )
 ```
 
 **WD-2: I can select necessary columns from a dataset.**
@@ -46,16 +57,34 @@ avocado <- read_csv(here("Week 4", "Labs", "avocado.csv"))
 
 **WD-3: I can filter rows from a dataframe for a *variety* of data types (e.g., numeric, integer, character, factor, date).**
 
--   numeric
+-   numeric Lab 3 question 11
 
 ```{r wd-3-numeric}
- filter( age < 20)
+ subj_fam <- hiphop_clean |>
+  filter( age < 20) |>
+  group_by(word) |>
+  summarise(mean_fam = mean(familiarity)) 
+
+subj_fam|>
+  slice_min(mean_fam)
+
+subj_fam|>
+  slice_max(mean_fam)
 ```
 
--   character -- specifically a string
+-   character -- specifically a string Lab 3 Question 12
 
 ```{r wd-3-string}
- filter( ethnic1 == "non-white", sex == "Female") 
+nw_women_fam <- hiphop_clean |>
+  filter( ethnic1 == "non-white", sex == "Female") |>
+  group_by(word) |>
+  summarise(mean_fam = mean(familiarity)) 
+
+nw_women_fam|>
+  slice_min(mean_fam)
+
+nw_women_fam|>
+  slice_max(mean_fam)
 
 ```
 
@@ -79,16 +108,28 @@ avocado <- read_csv(here("Week 4", "Labs", "avocado.csv"))
 
 ```
 
--   character -- specifically a string
+-   character -- specifically a string Lab 3 question 3
 
 ```{r wd-4-string}
-mutate(ethnic1 = if_else(ethnic == "white", "white", "non-white"))
+hiphop_clean = hiphop_clean |>
+  mutate(ethnic1 = if_else(ethnic == "white", "white", "non-white"))
 ```
 
--   factor
+-   factor - Lab 5 Question 2.3
 
 ```{r wd-4-factor}
- mutate(genus = fct_reorder(genus , weight, mean)
+ AverageWeight2 <- surveys |>
+  mutate(genus = fct_reorder(genus , weight, mean) |>
+           fct_rev()) |>
+  group_by(genus, year) |>
+  summarise(AverageWeight = mean(weight), .groups = "keep")
+
+ggplot(data = AverageWeight2, 
+       mapping = aes(x = year, y = AverageWeight, color = genus)) +
+  geom_line() +
+  labs(x = "Year of Observation", 
+       y = "Average Weight (Grams)", 
+       color = "Genus of Rodent")
 ```
 
 -   date
@@ -111,10 +152,25 @@ mutate(ethnic1 = if_else(ethnic == "white", "white", "non-white"))
 
 ```
 
--   `inner_join()`
+-   `inner_join() - Lab 4 Question 7`
 
 ```{r wd-5-inner}
- inner_join(avocado_metro, by = "region")
+ California |>
+  inner_join(avocado_metro, by = "region") |>
+  pivot_longer(cols = (Smalls:ExtraLarges),
+               names_to = "Avocado Size", 
+               values_to = "Amntsld") |>
+  group_by(region, type, `Avocado Size`) |>
+  summarise(avgsld = mean(Amntsld)) |>
+  mutate(`Avocado Size` = factor(`Avocado Size`, 
+                                 levels = c("Smalls", "Larges", "ExtraLarges"))) |>
+  ggplot( aes(fill = `Avocado Size`, y = avgsld, x = region)) + 
+    geom_bar(position = "fill", stat = "identity") +
+  facet_wrap( ~ type) +
+ scale_x_discrete(guide = guide_axis(n.dodge = 2)) +
+  labs(x = "Region of CA", y = "Proportion of Mean Avocados Sold") +
+  scale_fill_manual(values = c("lightblue", "dodgerblue2", "darkolivegreen2")) 
+
 ```
 
 -   `full_join()`
@@ -131,10 +187,11 @@ mutate(ethnic1 = if_else(ethnic == "white", "white", "non-white"))
 
 ```
 
--   `anti_join()`
+-   `anti_join()` Lab Question 2
 
 ```{r wd-6-anti}
-
+avocado_metro <- avocado |>
+  anti_join(avocado_major, by = "region")
 ```
 
 **WD-7: I can pivot dataframes from long to wide and visa versa**
@@ -142,18 +199,37 @@ mutate(ethnic1 = if_else(ethnic == "white", "white", "non-white"))
 -   `pivot_longer()`
 
 ```{r wd-7-long}
- pivot_longer(cols = (Smalls:ExtraLarges),
+California |>
+  inner_join(avocado_metro, by = "region") |>
+  pivot_longer(cols = (Smalls:ExtraLarges),
                names_to = "Avocado Size", 
-               values_to = "Amntsld")
+               values_to = "Amntsld") |>
+  group_by(region, type, `Avocado Size`) |>
+  summarise(avgsld = mean(Amntsld)) |>
+  mutate(`Avocado Size` = factor(`Avocado Size`, 
+                                 levels = c("Smalls", "Larges", "ExtraLarges"))) |>
+  ggplot( aes(fill = `Avocado Size`, y = avgsld, x = region)) + 
+    geom_bar(position = "fill", stat = "identity") +
+  facet_wrap( ~ type) +
+ scale_x_discrete(guide = guide_axis(n.dodge = 2)) +
+  labs(x = "Region of CA", y = "Proportion of Mean Avocados Sold") +
+  scale_fill_manual(values = c("lightblue", "dodgerblue2", "darkolivegreen2")) 
 
 ```
 
--   `pivot_wider()`
+-   `pivot_wider()` Lab 4 Question 6
 
 ```{r wd-7-wide}
- pivot_wider(names_from = type,
-              values_from = AvocadoPrice)
-
+ California <- avocado_metro |>
+  filter(region %in% c("LosAngeles", "SanDiego", "Sacramento", "SanFrancisco")) |>
+  group_by(region, type) |>
+  summarise(AvocadoPrice = mean(AveragePrice), 
+            .groups = "keep") |>
+  pivot_wider(names_from = type,
+              values_from = AvocadoPrice) |>
+  mutate(PriceDifference = organic - conventional) |>
+  arrange(desc(PriceDifference))
+California
 ```
 
 ## Reproducibility
@@ -164,29 +240,59 @@ I've done this in the following provided assignments:
 
 **R-2: I can write well documented and tidy code.**
 
--   Example 1
+-   Example 1 Lab 2 Question 8
 
 ```{r r-2-1}
-
+# Code for question 8 (and 9 and 10 and 11 and 12)! :) 
+ggplot(data = surveys,
+       mapping = aes(x = species, y = weight)) + 
+   #changing color of all points
+  geom_jitter(color = "lightblue", alpha = 0.2) +  
+  #getting rid of outliers from boxplot graph 
+  geom_boxplot(outlier.shape = NA) 
 ```
 
--   Example 2
+-   Example 2 Lab 5 Question 3.1
 
 ```{r r-2-2}
-
+ggplot(data = Captured, 
+       mapping = aes(x = day_of_week, 
+                     y = n, 
+                     fill = day_of_week)) +
+  geom_col() +
+  labs(x = "Day of the Week Captured", 
+       y = "Total Amount of Rodents Captured", 
+       fill = "Day of the Week")
 ```
 
 **R-3: I can write robust programs that are resistant to changes in inputs.**
 
--   Example 1
+-   Example 1 Lab 4 Question 5
 
 ```{r r-3-1}
+top_five <- avocado_metro|>
+  group_by(region) |>
+  summarise(avg_sales = mean(`Total Volume`)) |>
+  slice_max(avg_sales, n= 5) |>
+  pull(region)
+  
+
+avocado_metro |>
+  filter(region %in% top_five)|>
+  ggplot(mapping = aes(x = region, y = `Total Volume`)) +
+  geom_boxplot(fill = "lightblue", colour = "darkgreen") +
+  labs(x = "Metro Regions", y = "Total Number of Avocados Sold")
 
 ```
 
--   Example 2
+-   Example 2 Lab 4 Question 3
 
 ```{r r-3-2}
+avocado_major |>
+  filter(type == "organic", year == "2017") |>
+  select(Smalls, region) |>
+  group_by(region) |>
+  summarise(total_small_sold = sum(Smalls))
 
 ```
 
@@ -220,57 +326,139 @@ I've done this in the following provided assignments:
 
 **DVS-2: I use plot modifications to make my visualization clear to the reader.**
 
--   Example 1
+-   Example 1 Lab 5 Question 1
 
 ```{r dvs-2-1}
+surveys <- surveys |>
+  mutate(species = fct_reorder(species, weight))
 
+ggplot(data = surveys,
+       mapping = aes(x = weight, y = species)) +
+  geom_jitter(color = "lightblue", alpha = 0.2) +
+  labs(x = "Weight (Grams)", y = "", 
+       title = "Boxplots of Weight by Rodent Species") +
+  geom_boxplot(outlier.shape = NA) 
 ```
 
--   Example 2
+-   Example 2 Lab 5 Question 3.2
 
 ```{r dvs-2-2}
+day_levels <- c("Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun")
+ cols <- c("Mon" = "red", "Tue" = "blue", "Wed" = "darkgreen", 
+           "Thu" = "orange", "Fri" = "lightblue", "Sat" = "tomato", "Sun" = "darkblue")
+ 
+ggplot(data = Captured, 
+       mapping = aes(x = factor(day_of_week, day_levels), 
+                     y = n,
+                     fill = factor(day_of_week, day_levels)
+                     )) +
+  geom_col() +
+  labs(x = "Day of the Week Captured", 
+       y = "", 
+       title = "Total Amount of Rodents Captured by Day of Week",
+       fill = " ") +
+  scale_fill_manual(values = cols)
+
+#https://guslipkin.medium.com/reordering-bar-and-column-charts-with-ggplot2-in-r-435fad1c643e
+
 
 ```
 
 **DVS-3: I show creativity in my visualizations**
 
--   Example 1
+-   Example 1 Lab 5 Question 3.2
 
 ```{r dvs-3-1}
+day_levels <- c("Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun")
+ cols <- c("Mon" = "red", "Tue" = "blue", "Wed" = "darkgreen", 
+           "Thu" = "orange", "Fri" = "lightblue", "Sat" = "tomato", "Sun" = "darkblue")
+ 
+ggplot(data = Captured, 
+       mapping = aes(x = factor(day_of_week, day_levels), 
+                     y = n,
+                     fill = factor(day_of_week, day_levels)
+                     )) +
+  geom_col() +
+  labs(x = "Day of the Week Captured", 
+       y = "", 
+       title = "Total Amount of Rodents Captured by Day of Week",
+       fill = " ") +
+  scale_fill_manual(values = cols)
+
+#https://guslipkin.medium.com/reordering-bar-and-column-charts-with-ggplot2-in-r-435fad1c643e
 
 ```
 
--   Example 2
+-   Example 2 Lab 5 Question 1
 
 ```{r dvs-3-2}
+surveys <- surveys |>
+  mutate(species = fct_reorder(species, weight))
 
+ggplot(data = surveys,
+       mapping = aes(x = weight, y = species)) +
+  geom_jitter(color = "lightblue", alpha = 0.2) +
+  labs(x = "Weight (Grams)", y = "", 
+       title = "Boxplots of Weight by Rodent Species") +
+  geom_boxplot(outlier.shape = NA) 
 ```
 
 **DVS-4: I can calculate numerical summaries of variables.**
 
--   Example 1
+-   Example 1 Lab 3 Question 5
 
 ```{r dvs-4-1}
-
+hiphop_clean <- hiphop |>
+  mutate(across(c(jayz, jayz1, barkley, boondocks, boondocks1, monique, bieber), 
+                as.factor))
+str(hiphop_clean)
 ```
 
--   Example 2
+-   Example 2 Lab 5 Question 2.2
 
 ```{r dvs-4-2}
+AverageWeight <- surveys |>
+  group_by(genus, year) |>
+  summarise(AverageWeight = mean(weight), .groups = "keep") 
+
+ggplot(data = AverageWeight, 
+       mapping = aes(x = year, 
+                     y = AverageWeight, 
+                     color = genus)) +
+  geom_line() +
+ labs(x = "Year of Observation", 
+       y = "Average Weight (Grams)", 
+       color = "Genus of Rodent")
 
 ```
 
 **DVS-5: I can find summaries of variables across multiple groups.**
 
--   Example 1
+-   Example 1 Challenge 3 Male vs Female
 
 ```{r dvs-5-1}
+women_genre <- hiphop_clean |>
+  filter( sex == "Female") |>
+  select(intl, vocal, classical, folk, rock, country, pop, alternative, hiphop, unclassifiable) |>
+  summarise_all(mean)
+women_genre
 
 ```
 
--   Example 2
+-   Example 2 Challenge 3 Question 12
 
 ```{r dvs-5-2}
+nw_women_fam <- hiphop_clean |>
+  filter( ethnic1 == "non-white", sex == "Female") |>
+  group_by(word) |>
+  summarise(mean_fam = mean(familiarity)) 
+
+nw_women_fam|>
+  slice_min(mean_fam)
+
+nw_women_fam|>
+  slice_max(mean_fam)
+
 
 ```
 
@@ -312,10 +500,13 @@ I've done this in the following provided assignments:
 
 ```
 
--   `across()`
+-   `across()` Lab 3 Question 5
 
 ```{r pe-1-across}
-
+hiphop_clean <- hiphop |>
+  mutate(across(c(jayz, jayz1, barkley, boondocks, boondocks1, monique, bieber), 
+                as.factor))
+str(hiphop_clean)
 ```
 
 -   `map()` functions
