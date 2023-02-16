@@ -11,7 +11,7 @@ execute:
   echo: true
 ---
 
-[**My Grade:**]{.underline} I believe my grade equivalent to course work evidenced below to be a B-. So far in our quarter, I feel I have already improved so much on my coding skills and have felt quite proud of what I have been able to accomplish thus far. However, I also recognize that my current skill set and programming knowledge is not up to par to an A oreven a solid B yet based on the grading guidelines we developed in class.
+[**My Grade:**]{.underline} I believe my grade equivalent to course work evidenced below to be a C+ to a B-. So far in our quarter, I feel I have already improved so much on my coding skills and have felt quite proud of what I have been able to accomplish thus far. However, I also recognize that my current skill set and programming knowledge is not up to par to an A oreven a solid B yet based on the grading guidelines we developed in class.
 
 [**Learning Objective Evidence:**]{.underline} In the code chunks below, provide code from a Lab or Challenge assignment where you believe you have demonstrated proficiency with the specified learning target. Be sure to specify **where** the code came from (e.g., Lab 4 Question 2).
 
@@ -49,9 +49,19 @@ message <- read_csv(here::here(
                       )
 ```
 
-**WD-2: I can select necessary columns from a dataset.**
+**WD-2: I can select necessary columns from a dataset.** Lab 3 Question 11
 
 ```{r wd-2}
+ subj_fam <- hiphop_clean |>
+  filter( age < 20) |>
+  group_by(word) |>
+  summarise(mean_fam = mean(familiarity)) 
+
+subj_fam|>
+  slice_min(mean_fam)
+
+subj_fam|>
+  slice_max(mean_fam)
 
 ```
 
