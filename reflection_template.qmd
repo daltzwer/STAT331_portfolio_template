@@ -210,7 +210,7 @@ avocado_metro <- avocado |>
 
 **WD-7: I can pivot dataframes from long to wide and visa versa**
 
--   `pivot_longer()`
+-   `pivot_longer()` Lab 4
 
 ```{r wd-7-long}
 California |>
@@ -314,16 +314,33 @@ avocado_major |>
 
 **DVS-1: I can create visualizations for a *variety* of variable types (e.g., numeric, character, factor, date)**
 
--   numeric variables
+-   numeric variables Lab 2 Question 6
 
 ```{r dvs-1-num}
-
+ggplot(data = surveys, 
+       mapping = aes(x = weight, 
+                     y = hindfoot_length)) +
+  geom_jitter(width = 2, height = 2) 
 ```
 
--   numeric variables and categorical variables
+-   numeric variables and categorical variables Lab 5 Question 3.2
 
 ```{r dvs-2-num-cat}
-
+day_levels <- c("Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun")
+ cols <- c("Mon" = "red", "Tue" = "blue", "Wed" = "darkgreen", 
+           "Thu" = "orange", "Fri" = "lightblue", "Sat" = "tomato", "Sun" = "darkblue")
+ 
+ggplot(data = Captured, 
+       mapping = aes(x = factor(day_of_week, day_levels), 
+                     y = n,
+                     fill = factor(day_of_week, day_levels)
+                     )) +
+  geom_col() +
+  labs(x = "Day of the Week Captured", 
+       y = "", 
+       title = "Total Amount of Rodents Captured by Day of Week",
+       fill = "Day of the Week") +
+  scale_fill_manual(values = cols)
 ```
 
 -   categorical variables
@@ -620,3 +637,5 @@ This is where I believe my greatest opportunity lies. Thus far, I rarely go abov
 ## Peer Support & Collaboration
 
 <!-- Include an image of feedback you gave that you are proud of (either in a peer review or in Discord) -->
+
+![](images/Stat%20331%20screenshot.png)

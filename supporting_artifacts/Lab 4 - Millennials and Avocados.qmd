@@ -1,0 +1,153 @@
+---
+title: "Lab 4: Millennials & Avocados"
+author: "Daltzwer Oliveros"
+format:
+  html: 
+    self-contained: true
+    code-tools: true 
+    code-fold: true 
+execute:
+  echo: true
+  messages: false
+  error: true
+  eval: true
+  warning: false
+editor: visual
+---
+
+```{r Set up}
+library(tidyverse)
+library(here)
+avocado <- read_csv(here("Week 4", "Labs", "avocado.csv")) |>
+  filter(region != "TotalUS")
+```
+
+# Question 1.
+
+This data contains information about the average price of avocados and the amount sold for each specific regions/cities.
+
+# Question 2.
+
+```{r Distinct region}
+
+avocado |>
+  distinct(region)
+```
+
+```{r rename avocado }
+avocado <- avocado |>
+  rename("Smalls" = `4046`, "Larges" = `4225`, "ExtraLarges" = `4770`)
+```
+
+```{r major region}
+avocado_major <- avocado |>
+  filter(region %in% c("Northeast", "Midsouth", "Southeast", "West", "SouthCentral", "Plains", "GreatLakes", "California")
+                       )
+```
+
+```{r metro region}
+avocado_metro <- avocado |>
+  anti_join(avocado_major, by = "region")
+
+```
+
+# Question 3.
+
+```{r}
+avocado_major |>
+  filter(type == "organic", year == "2017") |>
+  select(Smalls, region) |>
+  group_by(region) |>
+  summarise(total_small_sold = sum(Smalls))
+  
+
+```
+
+The West sold the most organic, small Hass avocados in 2017 at 1,870,206.3.
+
+# Question 4.
+
+```{r}
+avocado_major |>
+  separate(Date, c("Year", "Month", "Day"), 
+           sep = "-") |>
+  group_by(Month) |>
+  summarise(avg_sales = mean(`Total Volume`)) |>
+  slice_max(avg_sales)
+```
+
+On average, the month of February sees the highest volume of avocado sales at 2,600,098.
+
+# Question 5
+
+```{r}
+top_five <- avocado_metro|>
+  group_by(region) |>
+  summarise(avg_sales = mean(`Total Volume`)) |>
+  slice_max(avg_sales, n= 5) |>
+  pull(region)
+  
+
+avocado_metro |>
+  filter(region %in% top_five)|>
+  ggplot(mapping = aes(x = region, y = `Total Volume`)) +
+  geom_boxplot(fill = "lightblue", colour = "darkgreen") +
+  labs(x = "Metro Regions", y = "Total Number of Avocados Sold")
+
+```
+
+As seen above, Los Angeles sold the most total avocados out of all the Metro Regions in our data set.
+
+# Question 6
+
+```{r California}
+California <- avocado_metro |>
+  filter(region %in% c("LosAngeles", "SanDiego", "Sacramento", "SanFrancisco")) |>
+  group_by(region, type) |>
+  summarise(AvocadoPrice = mean(AveragePrice), 
+            .groups = "keep") |>
+  pivot_wider(names_from = type,
+              values_from = AvocadoPrice) |>
+  mutate(PriceDifference = organic - conventional) |>
+  arrange(desc(PriceDifference))
+California
+
+ 
+```
+
+```{r}
+California |>
+  ggplot(mapping = aes(x = region, 
+                       y = PriceDifference, 
+                       fill = region)) +
+  geom_col() +
+  labs(x = "Regions of CA", 
+       y = "Price Difference of Organic and Conventional")
+```
+
+According to the information above, San Francisco sees the biggest difference in the price of their organic avocados and conventional avocados at about \$0.81 followed by Sacramento at about \$0.70 difference.
+
+# Question 7
+
+```{r}
+California |>
+  inner_join(avocado_metro, by = "region") |>
+  pivot_longer(cols = (Smalls:ExtraLarges),
+               names_to = "Avocado Size", 
+               values_to = "Amntsld") |>
+  group_by(region, type, `Avocado Size`) |>
+  summarise(avgsld = mean(Amntsld)) |>
+  mutate(`Avocado Size` = factor(`Avocado Size`, 
+                                 levels = c("Smalls", "Larges", "ExtraLarges"))) |>
+  ggplot( aes(fill = `Avocado Size`, y = avgsld, x = region)) + 
+    geom_bar(position = "fill", stat = "identity") +
+  facet_wrap( ~ type) +
+ scale_x_discrete(guide = guide_axis(n.dodge = 2)) +
+  labs(x = "Region of CA", y = "Proportion of Mean Avocados Sold") +
+  scale_fill_manual(values = c("lightblue", "dodgerblue2", "darkolivegreen2")) 
+
+#https://r-graph-gallery.com/48-grouped-barplot-with-ggplot2
+#https://datavizpyr.com/how-to-dodge-overlapping-text-on-x-axis-labels-in-ggplot2/
+#http://www.stat.columbia.edu/~tzheng/files/Rcolor.pdf
+  
+```

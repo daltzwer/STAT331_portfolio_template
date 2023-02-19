@@ -1,0 +1,98 @@
+---
+title: "Challenge 3: Hip-Hop Lyrics"
+author: "Daltzwer Oliveros"
+format:
+  html: 
+    self-contained: true
+    code-tools: true 
+    code-fold: true 
+execute:
+  echo: true
+  messages: false
+  error: true
+  eval: true
+editor: visual
+---
+
+```{r packages}
+#| warning : false
+#| message: false
+# code chunk for loading packages and importing the data
+library(tidyverse)
+library(here)
+
+hiphop <- read.csv(here("Week 3", "Lab", "hiphop.csv"))
+hiphop_clean <- hiphop |>
+  mutate(across(c(jayz, jayz1, barkley, boondocks, boondocks1, monique, bieber), as.factor))
+hiphop_clean = hiphop_clean |>
+  mutate(ethnic1 = if_else(ethnic == "white", "white", "non-white"))
+```
+
+# Male vs Female
+
+```{r Men Genre}
+men_genre <- hiphop_clean |>
+  filter( sex == "Male") |>
+  select(intl, vocal, classical, folk, rock, country, pop, alternative, hiphop, unclassifiable) |>
+  summarise_all(mean)
+men_genre
+
+#https://dplyr.tidyverse.org/reference/summarise_all.html
+```
+
+```{r Women Genre}
+women_genre <- hiphop_clean |>
+  filter( sex == "Female") |>
+  select(intl, vocal, classical, folk, rock, country, pop, alternative, hiphop, unclassifiable) |>
+  summarise_all(mean)
+women_genre
+```
+
+```{r difference in men and women}
+diff <- men_genre - women_genre
+diff
+```
+
+```{r difference in men and women data}
+diff |>
+  pivot_longer(cols = intl:unclassifiable, names_to = "genre", values_to = "difference") |>
+  slice_max(difference)
+
+#https://tidyr.tidyverse.org/reference/pivot_longer.html
+
+```
+
+# White vs Non-White
+
+```{r white genre}
+white_genre <- hiphop_clean |>
+  filter( ethnic1 == "white") |>
+  select(intl, vocal, classical, folk, rock, country, pop, alternative, hiphop, unclassifiable) |>
+  summarise_all(mean)
+white_genre
+```
+
+```{r non-white genre}
+non_white_genre <- hiphop_clean |>
+  filter( ethnic1 == "non-white") |>
+  select(intl, vocal, classical, folk, rock, country, pop, alternative, hiphop, unclassifiable) |>
+  summarise_all(mean)
+non_white_genre
+```
+
+```{r difference in white and non-white}
+diff_eth <- white_genre - non_white_genre
+diff_eth
+```
+
+```{r difference in white and non-white data}
+diff_eth |>
+  pivot_longer(cols = intl:unclassifiable, names_to = "genre", values_to = "difference") |>
+  slice_max(difference)
+```
+
+According to the data we have obtained, Rock had a higher average than the other genres. For men vs women, the average difference is 1.1272 and for white and non-white, the average difference is 1.509.
+
+# Question 5.2
+
+I think one concern I immediately had while working on this project was this assumption that familiarity equates to fluency or even an understanding of the word that is being tested. Being an immigrant from the Philippines, if you had asked me 7 years ago if I was familiar with certain words I hear on the radio, I would have instantly said yes. However, as the years went on, I learned that just because I was "familiar" with the word, it does not mean I knew its true meaning nor its origins. This often got me into some sort of trouble, or I would accidentally offend someone, as I would use a word assuming I knew what it meant based on how it was used in the songs I previously heard. Additionally, I just do not believe you can predict ones fluency of AAE based on their music taste. Someone can have high proficiency in AAE despite not having a preference for Hip Hop and vice versa. Secondly, this study asked their participants to "self-report as series of demographic questions". This method of data collection makes it difficult to confirm the validity of the data that has been collected. Lastly, the exclusion of having African Americans be a part of the study also concerned me. I am not really sure for the reasoning of excluding black people in the study other than the assumption that all black people are already familiar with the chosen words and phrases.Come to think of it, I am not sure how they confirmed the words/phrases they chose were actually part of AAE.

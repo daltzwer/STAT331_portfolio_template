@@ -1,0 +1,162 @@
+---
+title: "Lab 5: Factors in Visualizations"
+author: "Daltzwer Oliveros"
+format:
+  html: 
+    self-contained: true
+    code-tools: true 
+    code-fold: true 
+execute:
+  echo: true
+  messages: false
+  error: true
+  eval: true
+  warning: false
+editor: visual
+---
+
+```{r}
+library(tidyverse)
+library(here)
+```
+
+```{r}
+surveys <- read_csv(here("Week 2", "Lab", "surveys.csv"))
+```
+
+# Question 1
+
+```{r}
+surveys <- surveys |>
+  mutate(species = fct_reorder(species, weight))
+
+ggplot(data = surveys,
+       mapping = aes(x = weight, y = species)) +
+  geom_jitter(color = "lightblue", alpha = 0.2) +
+  labs(x = "Weight (Grams)", y = "", 
+       title = "Boxplots of Weight by Rodent Species") +
+  geom_boxplot(outlier.shape = NA) 
+```
+
+# Question 2.1
+
+```{r}
+
+ggplot(data = surveys, 
+       mapping = aes( x = year, y = weight, color = genus)) +
+  geom_line() +
+  labs(x = "Year of Observation", 
+       y = "Average Weight (Grams)", 
+       color = "Genus of Rodent")
+```
+
+# Question 2.2
+
+```{r}
+AverageWeight <- surveys |>
+  group_by(genus, year) |>
+  summarise(AverageWeight = mean(weight), .groups = "keep") 
+
+ggplot(data = AverageWeight, 
+       mapping = aes(x = year, 
+                     y = AverageWeight, 
+                     color = genus)) +
+  geom_line() +
+ labs(x = "Year of Observation", 
+       y = "Average Weight (Grams)", 
+       color = "Genus of Rodent")
+```
+
+# Question 2.3
+
+```{r}
+AverageWeight2 <- surveys |>
+  mutate(genus = fct_reorder(genus , weight, mean) |>
+           fct_rev()) |>
+  group_by(genus, year) |>
+  summarise(AverageWeight = mean(weight), .groups = "keep")
+
+ggplot(data = AverageWeight2, 
+       mapping = aes(x = year, y = AverageWeight, color = genus)) +
+  geom_line() +
+  labs(x = "Year of Observation", 
+       y = "Average Weight (Grams)", 
+       color = "Genus of Rodent")
+```
+
+# Question 2.4
+
+```{r}
+
+ggplot(data = AverageWeight2, 
+       mapping = aes(x = year, 
+                     y = AverageWeight, color = genus)) +
+  geom_line() +
+  labs(color = "Rodent Genus", 
+       y = "", 
+       title = "Average weight of each genus of rodents over time", 
+       x = "Year of Observation")
+```
+
+# Question 3.1
+
+```{r}
+Captured <- surveys |>
+  count(day_of_week) |>
+  drop_na()
+Captured
+```
+
+```{r}
+ggplot(data = Captured, 
+       mapping = aes(x = day_of_week, 
+                     y = n, 
+                     fill = day_of_week)) +
+  geom_col() +
+  labs(x = "Day of the Week Captured", 
+       y = "Total Amount of Rodents Captured", 
+       fill = "Day of the Week")
+```
+
+# Question 3.2
+
+```{r}
+day_levels <- c("Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun")
+ cols <- c("Mon" = "red", "Tue" = "blue", "Wed" = "darkgreen", 
+           "Thu" = "orange", "Fri" = "lightblue", "Sat" = "tomato", "Sun" = "darkblue")
+ 
+ggplot(data = Captured, 
+       mapping = aes(x = factor(day_of_week, day_levels), 
+                     y = n,
+                     fill = factor(day_of_week, day_levels)
+                     )) +
+  geom_col() +
+  labs(x = "Day of the Week Captured", 
+       y = "", 
+       title = "Total Amount of Rodents Captured by Day of Week",
+       fill = "Day of the Week") +
+  scale_fill_manual(values = cols)
+
+#https://guslipkin.medium.com/reordering-bar-and-column-charts-with-ggplot2-in-r-435fad1c643e
+```
+
+# Question 3.3
+
+```{r}
+Captured <- Captured |>
+  mutate(
+    day_of_week = fct_collapse(day_of_week, 
+                           "Weekday" = c("Mon", "Tue", "Wed", "Thu", "Fri"),
+                           "Weekend" = c("Sat", "Sun"))) |>
+  group_by(day_of_week) |>
+  summarise(total_week = sum(n))
+
+ggplot(data = Captured, mapping = aes(x = day_of_week, 
+                                      y = total_week, 
+                                      fill = day_of_week)) +
+  geom_col() +
+  labs(x = "Day of the Week Captured", 
+       y = "", 
+       title = "Total Amount of Rodents Captured by Day of Week",
+       fill = "Day of the Week")
+```
