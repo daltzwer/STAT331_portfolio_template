@@ -104,7 +104,7 @@ nw_women_fam|>
 
 ```
 
--   date Practice Activity Question 3
+-   date Practice Activity 5.1 Question 3
 
 ```{r wd-3-date}
 suspects_ <- suspects |>
@@ -143,7 +143,7 @@ ggplot(data = AverageWeight2,
        color = "Genus of Rodent")
 ```
 
--   date Practice Activity Question 1
+-   date Practice Activity 5.1 Question 1
 
 ```{r wd-4-date}
 suspects <- suspects |>
@@ -187,7 +187,7 @@ suspects <- suspects |>
 
 ```
 
--   `full_join()` Preview Activity 11 Question 2
+-   `full_join()` Preview Activity 4.3 Question 2
 
 ```{r wd-5-full}
 
@@ -195,7 +195,7 @@ suspects <- suspects |>
 
 **WD-6: I can use filtering joins to filter rows from a dataframe.**
 
--   `semi_join()`
+-   `semi_join()` Lab 4 Question 5. Unofficial revision
 
 ```{r wd-6-semi}
 
@@ -562,10 +562,13 @@ str(hiphop_clean)
 
 **PE-3:I can use iteration to reduce repetition in my code.**
 
--   `across()`
+-   `across()` Lab 3 Question 5
 
 ```{r pe-3-across}
-
+hiphop_clean <- hiphop |>
+  mutate(across(c(jayz, jayz1, barkley, boondocks, boondocks1, monique, bieber), 
+                as.factor))
+str(hiphop_clean)
 ```
 
 -   `map()` functions (Provide 2 Examples)
@@ -639,3 +642,6 @@ This is where I believe my greatest opportunity lies. Thus far, I rarely go abov
 <!-- Include an image of feedback you gave that you are proud of (either in a peer review or in Discord) -->
 
 ![](images/Stat%20331%20screenshot.png)
+
+Similar to what I wrote in the "Extending My Thinking" section of our reflection, often times, I find myself hesitant to provide more useful feedback due to my fear of giving the wrong answer.
+Despite my limited knowledge and skill set, however, I believe I have done well in this aspect of our class. I complete our weekly Peer Reviews on time while trying to be as detailed as I can about the things my peer should keep doing or improve upon. In our groups, I have acted on my role as best as I can without going into someone's role while being patient and respectful. I try to clarify any ambiguity my group members may have when I can and help debug their code for our lab assignments. I will, however, admit that I feel that I have not been carrying my own weight in our practice activities due to my limited skill set. I am unsure if this is an accurate depiction of our group situation but I would like to continue improving on this department so I can contribute a little more in our group projects and better support my group members.
