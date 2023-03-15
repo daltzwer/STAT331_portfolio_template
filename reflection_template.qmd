@@ -435,13 +435,19 @@ ggplot(data = surveys,
 
 **DVS-4: I can calculate numerical summaries of variables.**
 
--   Example 1 Lab 3 Question 5
+-   Example 1 Lab 9 Question 5.8
 
 ```{r dvs-4-1}
-hiphop_clean <- hiphop |>
-  mutate(across(c(jayz, jayz1, barkley, boondocks, boondocks1, monique, bieber), 
-                as.factor))
-str(hiphop_clean)
+baby_allan |>
+  group_by(Year, Name) |>
+  summarise(Count = sum(Count), .groups = "keep") |>
+  ggplot(mapping = aes(x = Year, 
+                       y = Count, 
+                       color = Name)) +
+  geom_line() +
+  labs(x = "Year Observed",
+       y = " ",
+       title = "Number of Male Born Babies Named Allan, Allen, or Alan")
 ```
 
 -   Example 2 Lab 5 Question 2.2
@@ -464,14 +470,19 @@ ggplot(data = AverageWeight,
 
 **DVS-5: I can find summaries of variables across multiple groups.**
 
--   Example 1 Challenge 3 Male vs Female
+-   Example 1 Lab 9 Question 5.8
 
 ```{r dvs-5-1}
-women_genre <- hiphop_clean |>
-  filter( sex == "Female") |>
-  select(intl, vocal, classical, folk, rock, country, pop, alternative, hiphop, unclassifiable) |>
-  summarise_all(mean)
-women_genre
+baby_allan |>
+  group_by(Year, Name) |>
+  summarise(Count = sum(Count), .groups = "keep") |>
+  ggplot(mapping = aes(x = Year, 
+                       y = Count, 
+                       color = Name)) +
+  geom_line() +
+  labs(x = "Year Observed",
+       y = " ",
+       title = "Number of Male Born Babies Named Allan, Allen, or Alan")
 
 ```
 
@@ -494,39 +505,99 @@ nw_women_fam|>
 
 **DVS-6: I can create tables which make my summaries clear to the reader.**
 
--   Example 1
+-   Example 1 Challenge 9 question 5.9
 
 ```{r dvs-6-1}
+Ca_Pa <- baby_allan |>
+  filter(Year == 2000, State %in% c("PA", "CA")) |>
+  mutate(Prop = Count/sum(Count)) |>
+   select(-Sex, -Year, -Count) |>
+   pivot_wider(names_from = Name, 
+              values_from = Prop,
+              values_fill = 0)
+Ca_Pa |>
+   kable(format = "html",
+               digits = 3,
+               col.names = 
+                 c("State", "Alan", "Allen", "Allan"),
+               caption = "Male Born Babies Named Allan, Allen, or Alan") |>
+  kable_classic(html_font = "Arial") |>
+  row_spec(0, background = "lightblue")
+  
 
 ```
 
--   Example 2
+-   Example 2 Challenge 9 question 4.2
 
 ```{r dvs-6-2}
+broom::tidy(Allison_lm) |>
+  rename("Term" = term, 
+         "Estimate" = estimate,
+         "Standadrd Error" = std.error,
+         "Statistic" = statistic,
+         "P-Value" = p.value) |>
+  kable(digits = 3) |>
+  kable_styling(full_width = TRUE) |>
+  row_spec(0, background = "lightblue")
+
+#https://stackoverflow.com/questions/41900335/adjusting-width-of-tables-made-with-kable-in-rmarkdown-documents
+#https://stackoverflow.com/questions/53188034/change-background-colour-of-knitrkable-headers
 
 ```
 
 **DVS-7: I show creativity in my tables.**
 
--   Example 1
+-   Example 1 challenge 9 question 5.9
 
 ```{r dvs-7-1}
-
+Ca_Pa <- baby_allan |>
+  filter(Year == 2000, State %in% c("PA", "CA")) |>
+  mutate(Prop = Count/sum(Count)) |>
+   select(-Sex, -Year, -Count) |>
+   pivot_wider(names_from = Name, 
+              values_from = Prop,
+              values_fill = 0)
+Ca_Pa |>
+   kable(format = "html",
+               digits = 3,
+               col.names = 
+                 c("State", "Alan", "Allen", "Allan"),
+               caption = "Male Born Babies Named Allan, Allen, or Alan") |>
+  kable_classic(html_font = "Arial") |>
+  row_spec(0, background = "lightblue")
+  
 ```
 
--   Example 2
+-   Example 2 Challenge 9 question 4.2
 
 ```{r dvs-7-2}
+broom::tidy(Allison_lm) |>
+  rename("Term" = term, 
+         "Estimate" = estimate,
+         "Standadrd Error" = std.error,
+         "Statistic" = statistic,
+         "P-Value" = p.value) |>
+  kable(digits = 3) |>
+  kable_styling(full_width = TRUE) |>
+  row_spec(0, background = "lightblue")
 
+#https://stackoverflow.com/questions/41900335/adjusting-width-of-tables-made-with-kable-in-rmarkdown-documents
+#https://stackoverflow.com/questions/53188034/change-background-colour-of-knitrkable-headers
 ```
 
 ## Program Efficiency
 
 **PE-1: I can write concise code which does not repeat itself.**
 
--   using a single function call
+-   using a single function call Lab 7 question 3.1
 
 ```{r pe-1-one-call}
+rescale_01 <- function(x) {
+  scaled <- (x - min(x)) / (max(x) - min(x))
+  
+  
+  return(scaled)
+}
 
 ```
 
@@ -549,15 +620,30 @@ sing_day(xmas2, x, "Full.Phrase"))
 
 **PE-2: I can write functions to reduce repetition in my code.**
 
--   Example 1
+-   Example 1 Lab 7 question 3.5
 
 ```{r pe2-1}
-
+rescale_column <- function(df, column_names){
+  
+  df <- df |>
+    mutate(across(.cols = all_of(column_names),
+                  .fns =  ~ rescale_01( .x)))
+  
+ return(df) 
+}
 ```
 
--   Example 2
+-   Example 2 lab 7 question 3.2
 
 ```{r pe2-2}
+rescale_01 <- function(x) {
+  stopifnot(is.numeric(x))
+  stopifnot(length(x) > 1)
+  scaled <- (x - min(x, na.rm = TRUE)) / (max(x, na.rm = TRUE) - min(x, na.rm = TRUE))
+  
+  
+  return(scaled)
+}
 
 ```
 
