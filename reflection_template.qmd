@@ -11,7 +11,7 @@ execute:
   echo: true
 ---
 
-[**My Grade:**]{.underline} I believe my grade equivalent to course work evidenced below to be a C+ to a B-. So far in our quarter, I feel I have already improved so much on my coding skills and have felt quite proud of what I have been able to accomplish thus far. However, I also recognize that my current skill set and programming knowledge is not up to par to an A or even a solid B yet based on the grading guidelines we developed in class.
+[**My Grade:**]{.underline} I believe my grade equivalent to course work evidenced below to be a B. So far in our quarter, I feel I have already improved so much on my coding skills and have felt quite proud of what I have been able to accomplish thus far. However, I also recognize that my current skill set and programming knowledge is not up to par to an A or even a solid B yet based on the grading guidelines we developed in class.
 
 [**Learning Objective Evidence:**]{.underline} In the code chunks below, provide code from a Lab or Challenge assignment where you believe you have demonstrated proficiency with the specified learning target. Be sure to specify **where** the code came from (e.g., Lab 4 Question 2).
 
@@ -49,19 +49,15 @@ message <- read_csv(here::here(
                       )
 ```
 
-**WD-2: I can select necessary columns from a dataset.** Lab 3 Question 11
+**WD-2: I can select necessary columns from a dataset.** Lab 3 Question 9
 
 ```{r wd-2}
- subj_fam <- hiphop_clean |>
-  filter( age < 20) |>
-  group_by(word) |>
-  summarise(mean_fam = mean(familiarity)) 
-
-subj_fam|>
-  slice_min(mean_fam)
-
-subj_fam|>
-  slice_max(mean_fam)
+ # code chunk for Q9
+demodata <- hiphop_clean |>
+  select(subj, age, sex, ethnic1) |>
+  distinct(subj, .keep_all = TRUE)
+demodata |>
+  count(sex)
 
 ```
 
@@ -199,6 +195,9 @@ suspects <- suspects |>
 
 ```{r wd-6-semi}
 
+
+avocado_major <- avocado |>
+  semi_join(major_region, by = "region")
 ```
 
 -   `anti_join()` Lab Question 2
@@ -250,7 +249,7 @@ California
 
 **R-1: I can create professional looking, reproducible analyses using RStudio projects, Quarto documents, and the here package.**
 
-I've done this in the following provided assignments:
+I've done this in the following provided assignments: lab 4
 
 **R-2: I can write well documented and tidy code.**
 
@@ -531,18 +530,20 @@ nw_women_fam|>
 
 ```
 
--   `across()` Lab 3 Question 5
+-   `across()` Lab 7 Question 2.1
 
 ```{r pe-1-across}
-hiphop_clean <- hiphop |>
-  mutate(across(c(jayz, jayz1, barkley, boondocks, boondocks1, monique, bieber), 
-                as.factor))
-str(hiphop_clean)
+fish |> 
+  summarise(across(.cols = trip:species, 
+                   .fns = ~ sum(is.na(.x))))
 ```
 
--   `map()` functions
+-   `map()` functions lab 8 question 2
 
 ```{r pe-1-map-1}
+1:12 |>
+  map(function(x)
+sing_day(xmas2, x, "Full.Phrase"))
 
 ```
 
@@ -562,18 +563,25 @@ str(hiphop_clean)
 
 **PE-3:I can use iteration to reduce repetition in my code.**
 
--   `across()` Lab 3 Question 5
+-   `across()` Lab 7 Question 3.5
 
 ```{r pe-3-across}
-hiphop_clean <- hiphop |>
-  mutate(across(c(jayz, jayz1, barkley, boondocks, boondocks1, monique, bieber), 
-                as.factor))
-str(hiphop_clean)
+rescale_column <- function(df, column_names){
+  
+  df <- df |>
+    mutate(across(.cols = all_of(column_names),
+                  .fns =  ~ rescale_01( .x)))
+  
+ return(df) 
+}
 ```
 
--   `map()` functions (Provide 2 Examples)
+-   `map()` functions (Provide 2 Examples) Lab 8 question 2
 
 ```{r pe-3-map-1}
+1:12 |>
+  map(function(x)
+sing_day(xmas2, x, "Full.Phrase"))
 
 ```
 
@@ -599,30 +607,33 @@ str(hiphop_clean)
 
 **DSM-1: I can simulate data from a *variety* of probability models.**
 
--   Example 1
+-   Example 1 Practice Activity 9.2
 
 ```{r dsm-1-1}
+qunif(0.95, 1.5, 3.5)
 
 ```
 
 -   Example 2
 
 ```{r dsm-1-2}
-
+qnorm(0.1, 4.6, 0.8)
 ```
 
 **DSM-2: I can fit a linear regression and extract necessary summary measures.**
 
--   Example 1
+-   Example 1 Lab 9 Question 4.1
 
 ```{r dsm-2-1}
-
+Allison_lm <- lm(Count ~ Year, data = allison_f_year)
+Allison_lm
 ```
 
--   Example 2
+-   Example 2 Practice Activity 9.1
 
 ```{r dsm-2-2}
-
+animal_lm <- animal |>
+  lm(weight_after ~ weight_before, data = _)
 ```
 
 ## Revising My Thinking
@@ -643,5 +654,4 @@ This is where I believe my greatest opportunity lies. Thus far, I rarely go abov
 
 ![](images/Stat%20331%20screenshot.png)
 
-Similar to what I wrote in the "Extending My Thinking" section of our reflection, often times, I find myself hesitant to provide more useful feedback due to my fear of giving the wrong answer.
-Despite my limited knowledge and skill set, however, I believe I have done well in this aspect of our class. I complete our weekly Peer Reviews on time while trying to be as detailed as I can about the things my peer should keep doing or improve upon. In our groups, I have acted on my role as best as I can without going into someone's role while being patient and respectful. I try to clarify any ambiguity my group members may have when I can and help debug their code for our lab assignments. I will, however, admit that I feel that I have not been carrying my own weight in our practice activities due to my limited skill set. I am unsure if this is an accurate depiction of our group situation but I would like to continue improving on this department so I can contribute a little more in our group projects and better support my group members.
+Similar to what I wrote in the "Extending My Thinking" section of our reflection, often times, I find myself hesitant to provide more useful feedback due to my fear of giving the wrong answer. Despite my limited knowledge and skill set, however, I believe I have done well in this aspect of our class. I complete our weekly Peer Reviews on time while trying to be as detailed as I can about the things my peer should keep doing or improve upon. In our groups, I have acted on my role as best as I can without going into someone's role while being patient and respectful. I try to clarify any ambiguity my group members may have when I can and help debug their code for our lab assignments. I will, however, admit that I feel that I have not been carrying my own weight in our practice activities due to my limited skill set. I am unsure if this is an accurate depiction of our group situation but I would like to continue improving on this department so I can contribute a little more in our group projects and better support my group members.
