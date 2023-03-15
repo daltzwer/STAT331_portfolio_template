@@ -373,16 +373,28 @@ ggplot(data = Captured,
   scale_fill_manual(values = cols)
 ```
 
--   categorical variables
+-   categorical variables lab 2 question 14
 
 ```{r dvs-2-cat}
-
+# Code for question 14!
+ggplot(data = surveys,
+       mapping = aes(x = weight, y = species)) +
+  geom_jitter(color = "tomato", alpha = 0.2) +
+  labs(x = "Species of Rodents", y = "Weight (Grams)") +
+   geom_boxplot(outlier.shape = NA) 
 ```
 
--   dates
+-   dates lab 5 question 2.4
 
 ```{r dvs-2-date}
-
+ggplot(data = AverageWeight2, 
+       mapping = aes(x = year, 
+                     y = AverageWeight, color = genus)) +
+  geom_line() +
+  labs(color = "Rodent Genus", 
+       y = "", 
+       title = "Average weight of each genus of rodents over time", 
+       x = "Year of Observation")
 ```
 
 **DVS-2: I use plot modifications to make my visualization clear to the reader.**
@@ -450,18 +462,28 @@ ggplot(data = Captured,
 
 ```
 
--   Example 2 Lab 5 Question 1
+-   Example 2 Lab 4 Question 7
 
 ```{r dvs-3-2}
-surveys <- surveys |>
-  mutate(species = fct_reorder(species, weight))
+California |>
+  inner_join(avocado_metro, by = "region") |>
+  pivot_longer(cols = (Smalls:ExtraLarges),
+               names_to = "Avocado Size", 
+               values_to = "Amntsld") |>
+  group_by(region, type, `Avocado Size`) |>
+  summarise(avgsld = mean(Amntsld)) |>
+  mutate(`Avocado Size` = factor(`Avocado Size`, 
+                                 levels = c("Smalls", "Larges", "ExtraLarges"))) |>
+  ggplot( aes(fill = `Avocado Size`, y = avgsld, x = region)) + 
+    geom_bar(position = "fill", stat = "identity") +
+  facet_wrap( ~ type) +
+ scale_x_discrete(guide = guide_axis(n.dodge = 2)) +
+  labs(x = "Region of CA", y = "Proportion of Mean Avocados Sold") +
+  scale_fill_manual(values = c("lightblue", "dodgerblue2", "darkolivegreen2")) 
 
-ggplot(data = surveys,
-       mapping = aes(x = weight, y = species)) +
-  geom_jitter(color = "lightblue", alpha = 0.2) +
-  labs(x = "Weight (Grams)", y = "", 
-       title = "Boxplots of Weight by Rodent Species") +
-  geom_boxplot(outlier.shape = NA) 
+#https://r-graph-gallery.com/48-grouped-barplot-with-ggplot2
+#https://datavizpyr.com/how-to-dodge-overlapping-text-on-x-axis-labels-in-ggplot2/
+#http://www.stat.columbia.edu/~tzheng/files/Rcolor.pdf
 ```
 
 **DVS-4: I can calculate numerical summaries of variables.**
@@ -708,30 +730,56 @@ sing_day(xmas2, x, "Full.Phrase"))
 
 **PE-4: I can use modern tools when carrying out my analysis.**
 
--   Example 1
+-   Example 1 lab 5 question 3.3
 
 ```{r pe-4-1}
+Captured <- Captured |>
+  mutate(
+    day_of_week = fct_collapse(day_of_week, 
+                           "Weekday" = c("Mon", "Tue", "Wed", "Thu", "Fri"),
+                           "Weekend" = c("Sat", "Sun"))) |>
+  group_by(day_of_week) |>
+  summarise(total_week = sum(n))
 
+ggplot(data = Captured, mapping = aes(x = day_of_week, 
+                                      y = total_week, 
+                                      fill = day_of_week)) +
+  geom_col() +
+  labs(x = "Day of the Week Captured", 
+       y = "", 
+       title = "Total Amount of Rodents Captured by Day of Week",
+       fill = "Day of the Week")
 ```
 
--   Example 2
+-   Example 2 lab 5 question 2.3
 
 ```{r pe-4-2}
+AverageWeight2 <- surveys |>
+  mutate(genus = fct_reorder(genus , weight, mean) |>
+           fct_rev()) |>
+  group_by(genus, year) |>
+  summarise(AverageWeight = mean(weight), .groups = "keep")
 
+ggplot(data = AverageWeight2, 
+       mapping = aes(x = year, y = AverageWeight, color = genus)) +
+  geom_line() +
+  labs(x = "Year of Observation", 
+       y = "Average Weight (Grams)", 
+       color = "Genus of Rodent")
 ```
 
 ## Data Simulation & Modeling
 
 **DSM-1: I can simulate data from a *variety* of probability models.**
 
--   Example 1 Practice Activity 9.2
+-   Example 1 Practice Activity 9.2 Warm up
 
 ```{r dsm-1-1}
 qunif(0.95, 1.5, 3.5)
 
 ```
 
--   Example 2
+-   Example 2 Practice Activity 9.2 Warm up
 
 ```{r dsm-1-2}
 qnorm(0.1, 4.6, 0.8)
