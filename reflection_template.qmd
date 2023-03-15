@@ -78,20 +78,40 @@ subj_fam|>
   slice_max(mean_fam)
 ```
 
--   character -- specifically a string Lab 3 Question 12
+-   character -- specifically a string Lab 8 part 1
 
 ```{r wd-3-string}
-nw_women_fam <- hiphop_clean |>
-  filter( ethnic1 == "non-white", sex == "Female") |>
-  group_by(word) |>
-  summarise(mean_fam = mean(familiarity)) 
+# Produces the string for one day of the song.
+# Arguments -- dataset: A data frame containing information about gifts
+# Arguments -- line: The number of the line for the day you want to sing about
+# Arguments -- phrase_col: The variable name for the column in the dataset that contains the song phrases
+# Return -- A string singing the line of the song with all gifts for the given day.
 
-nw_women_fam|>
-  slice_min(mean_fam)
+sing_day <- function(dataset, line, phrase_col){
+  
+  # Step 1: Setup the intro line
+  # Hint: You need to convert a number (e.g., 1) to a word (e.g., first)
+  num_word <- ordinal(line)
+  
+  intro <- glue::glue("On the {num_word} day of Christmas, my true love gave to me:")
+  
+  # Step 2: Sing the gift phrases
 
-nw_women_fam|>
-  slice_max(mean_fam)
+    phrases <- dataset |>
+      pull( {{phrase_col}} )
+     if(line == 1){
+     phrases[1] <- str_replace(phrases[1], "and ", "") 
+    }
+    phrases <- c(intro,phrases[line:1])
+    phrases <- glue_collapse(phrases, sep = "\n")
+    
 
+    
+  ## put it together
+    return(phrases)
+    
+
+}
 ```
 
 -   factor
@@ -109,9 +129,20 @@ suspects_ <- suspects |>
 
 **WD-4: I can modify existing variables and create new variables in a dataframe for a *variety* of data types (e.g., numeric, integer, character, factor, date).**
 
--   numeric
+-   numeric lab 4 question 6
 
 ```{r wd-4-numeric}
+California <- avocado_metro |>
+  filter(region %in% c("LosAngeles", "SanDiego", "Sacramento", "SanFrancisco")) |>
+  group_by(region, type) |>
+  summarise(AvocadoPrice = mean(AveragePrice), 
+            .groups = "keep") |>
+  pivot_wider(names_from = type,
+              values_from = AvocadoPrice) |>
+  mutate(PriceDifference = organic - conventional) |>
+  arrange(desc(PriceDifference))
+California
+
 
 ```
 
