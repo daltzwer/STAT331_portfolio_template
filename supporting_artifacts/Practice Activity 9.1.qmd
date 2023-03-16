@@ -1,0 +1,25 @@
+---
+title: "Practice Activity 9.1"
+author: "Daltzwer Oliveros"
+format: html
+editor: visual
+---
+
+```{r}
+library(tidyverse)
+library(here) 
+library(broom)
+animal <- read_csv(here("Week 9", "Practice Activity", "mystery_animal.csv"))
+```
+
+```{r}
+animal_lm <- animal |>
+  lm(weight_after ~ weight_before, data = _)
+```
+
+```{r}
+animal_lm |> 
+  broom::augment() |> 
+  ggplot(mapping = aes(y = .resid, x = .fitted)) +
+  geom_point()
+```

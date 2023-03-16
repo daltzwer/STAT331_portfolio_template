@@ -1,0 +1,172 @@
+---
+title: "Challenge 9 Creating Tables"
+author: "Daltzwer Oliveros"
+format:
+  html: 
+    self-contained: true
+    code-tools: true 
+    code-fold: true 
+execute:
+  echo: true
+  messages: false
+  error: true
+  eval: true
+  warning: false
+editor: visual
+---
+
+```{r set up}
+library(tidyverse)
+library(here)
+library(knitr)
+library(kableExtra)
+library(gt)
+library(DT)
+baby_names <- read_csv(here("Week 9", "Labs", "StateNames_A.csv"))
+```
+
+# 3.1 Summarizing and Visualizing the Number of Allisons
+
+```{r}
+baby_names <- baby_names |>
+  rename("Sex" = Gender)
+```
+
+```{r}
+datatable(baby_names |>
+                sample_n(10000) |>
+                arrange(Name, Year, State))
+  
+```
+
+```{r}
+baby_names |>
+  filter(Name == "Allison") |>
+  group_by(State, Sex) |>
+  summarise(Count = sum(Count), .groups = "keep") |>
+   pivot_wider(names_from = Sex,
+              values_from = Count,
+              values_fill = 0) |>
+   kable(format = "html",
+               digits = 3,
+               col.names = 
+                 c("State", "F", "M"),
+               caption = "Number of Babies Named Allison for each State") |>
+  kable_classic(html_font = "Arial")
+ 
+  
+```
+
+# 3.2 Summarizing and Visualizing the Number of Allisons
+
+```{r}
+allison_f <- baby_names |>
+  filter(Sex == "F", Name == "Allison")
+```
+
+# 3.3 Summarizing and Visualizing the Number of Allisons
+
+```{r}
+allison_f_year <- allison_f |>
+  group_by(Year) |>
+  summarise(Count = sum(Count)) 
+ggplot(data = allison_f_year, mapping = aes(x = Year, 
+                                            y = Count)
+                                            ) +
+  geom_line() +
+   labs(x = "Year Observed", 
+       y = " ",
+       title = "Number of Female Born Babies Named Allison")
+
+```
+
+# 4.1 Modeling the Number of Allisons
+
+```{r}
+Allison_lm <- lm(Count ~ Year, data = allison_f_year)
+Allison_lm
+```
+
+# 4.2 Modeling the Number of Allisons
+
+```{r}
+broom::tidy(Allison_lm) |>
+  rename("Term" = term, 
+         "Estimate" = estimate,
+         "Standadrd Error" = std.error,
+         "Statistic" = statistic,
+         "P-Value" = p.value) |>
+  kable(digits = 3) |>
+  kable_styling(full_width = TRUE) |>
+  row_spec(0, background = "lightblue")
+
+#https://stackoverflow.com/questions/41900335/adjusting-width-of-tables-made-with-kable-in-rmarkdown-documents
+#https://stackoverflow.com/questions/53188034/change-background-colour-of-knitrkable-headers
+```
+
+Predicted number of Allisons = 209689.76 - 101.52 (year)
+
+# 4.6 Modeling the Number of Allisons
+
+```{r}
+Allison_lm |>
+  broom::augment() |>
+  ggplot(mapping = aes(y = .resid, x = .fitted)) +
+  geom_point()
+```
+
+I believe we do see some evidence of patterns in the graph above but not enough to cause concern since they are not the fanning and funneling shape we are looking for.
+
+# 4.7 Conclusion 
+
+Based on the information given to us above, we can see that for every year that passes, the number of babies named Allison decreases by 101.5. So, we can conclude that the name Allison has been decreasing in popularity over time (still a cool name though!).
+
+# 5.8 Spelling by State
+
+```{r}
+baby_allan <- baby_names |>
+  filter(Name %in% c("Allan", "Alan", "Allen"), Sex == "M")
+```
+
+```{r}
+baby_allan |>
+  group_by(Year, Name) |>
+  summarise(Count = sum(Count), .groups = "keep") |>
+  ggplot(mapping = aes(x = Year, 
+                       y = Count, 
+                       color = Name)) +
+  geom_line() +
+   labs(x = "Year Observed",
+       y = " ",
+       title = "Number of Male Born Babies Named Allan, Allen, or Alan")
+```
+
+# 5.9 Spelling by State
+
+```{r}
+Ca_Pa <- baby_allan |>
+  filter(Year == 2000, State %in% c("PA", "CA")) |>
+  mutate(Prop = Count/sum(Count)) |>
+   select(-Sex, -Year, -Count) |>
+   pivot_wider(names_from = Name, 
+              values_from = Prop,
+              values_fill = 0)
+Ca_Pa |>
+   kable(format = "html",
+               digits = 3,
+               col.names = 
+                 c("State", "Alan", "Allen", "Allan"),
+               caption = "Male Born Babies Named Allan, Allen, or Alan") |>
+  kable_classic(html_font = "Arial") |>
+  row_spec(0, background = "lightblue")
+  
+ 
+```
+
+#5.10 Spelling by State
+
+```{r}
+Ca_Pa |>
+  gt() |>
+  fmt_percent(columns = 2:4, decimals = 0)
+```

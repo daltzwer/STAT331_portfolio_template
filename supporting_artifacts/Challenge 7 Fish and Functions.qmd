@@ -1,0 +1,71 @@
+---
+title: "Challenge 7: Fish and Functions"
+author: "Daltzwer Oliveros"
+format:
+  html: 
+    self-contained: true
+    code-tools: true 
+    code-fold: true 
+execute:
+  echo: true
+  messages: false
+  error: true
+  eval: true
+  warning: false
+editor: visual
+---
+
+# question 4.1
+
+```{r}
+library(tidyverse)
+library(here)
+fish <- read_csv(here("Week 7", "Labs", "BlackfootFish.csv"))
+```
+
+```{r}
+fish |>
+  mutate(weight_grams = weight * 453.592, 
+         length_mm = length * 25.4)
+```
+
+# question 4.2
+
+```{r}
+na_replacer <- function(x, min_low, max_high){
+   x <- case_when(x < min_low | x > max_high ~ NaN,
+   TRUE ~ x)
+   return(x)
+}
+
+na_replacer(c(1.1, 5.3, 10, 2.6), 3, 7)
+```
+
+```{r}
+fish <- fish |>
+  mutate(length = na_replacer(length, 25, 575), 
+         weight =na_replacer(weight, 0, 2000) )
+```
+
+```{r}
+condition_index <- function(length, weight) {
+  return(weight/length^3 *100)
+}
+```
+
+# question 4.3
+
+```{r}
+fish |>
+  mutate(condition = condition_index(length, weight), trip = as.factor(trip)) |>
+  group_by(year, trip, species) |>
+  summarise(average_condition = mean(condition, na.rm = TRUE)) |>
+   ggplot(mapping = aes(x = year, y = average_condition, color = trip)) +
+  geom_line() + 
+  labs(title = "Average Condition Index per Year") +
+  facet_wrap( ~ species)
+ 
+
+```
+
+For this visualization, I wanted to make a graph that shows how the average condition of the fish changed over the years. However, I also wanted to see the differences between the two trips and the variability of the condition for each species of fish. As we can see on the visualization above, the variability in condition for the West slope Cutthroat Trout stayed the same but there is a lot of variablity in condition for the Bull Trout during the 1st trip.

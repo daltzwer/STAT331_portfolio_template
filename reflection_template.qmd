@@ -78,40 +78,9 @@ subj_fam|>
   slice_max(mean_fam)
 ```
 
--   character -- specifically a string Lab 8 part 1
+-   character -- specifically a string 
 
 ```{r wd-3-string}
-# Produces the string for one day of the song.
-# Arguments -- dataset: A data frame containing information about gifts
-# Arguments -- line: The number of the line for the day you want to sing about
-# Arguments -- phrase_col: The variable name for the column in the dataset that contains the song phrases
-# Return -- A string singing the line of the song with all gifts for the given day.
-
-sing_day <- function(dataset, line, phrase_col){
-  
-  # Step 1: Setup the intro line
-  # Hint: You need to convert a number (e.g., 1) to a word (e.g., first)
-  num_word <- ordinal(line)
-  
-  intro <- glue::glue("On the {num_word} day of Christmas, my true love gave to me:")
-  
-  # Step 2: Sing the gift phrases
-
-    phrases <- dataset |>
-      pull( {{phrase_col}} )
-     if(line == 1){
-     phrases[1] <- str_replace(phrases[1], "and ", "") 
-    }
-    phrases <- c(intro,phrases[line:1])
-    phrases <- glue_collapse(phrases, sep = "\n")
-    
-
-    
-  ## put it together
-    return(phrases)
-    
-
-}
 ```
 
 -   factor
@@ -146,11 +115,40 @@ California
 
 ```
 
--   character -- specifically a string Lab 3 question 3
+-   character -- specifically a string Lab 8 part 1
 
 ```{r wd-4-string}
-hiphop_clean = hiphop_clean |>
-  mutate(ethnic1 = if_else(ethnic == "white", "white", "non-white"))
+# Produces the string for one day of the song.
+# Arguments -- dataset: A data frame containing information about gifts
+# Arguments -- line: The number of the line for the day you want to sing about
+# Arguments -- phrase_col: The variable name for the column in the dataset that contains the song phrases
+# Return -- A string singing the line of the song with all gifts for the given day.
+
+sing_day <- function(dataset, line, phrase_col){
+  
+  # Step 1: Setup the intro line
+  # Hint: You need to convert a number (e.g., 1) to a word (e.g., first)
+  num_word <- ordinal(line)
+  
+  intro <- glue::glue("On the {num_word} day of Christmas, my true love gave to me:")
+  
+  # Step 2: Sing the gift phrases
+
+    phrases <- dataset |>
+      pull( {{phrase_col}} )
+     if(line == 1){
+     phrases[1] <- str_replace(phrases[1], "and ", "") 
+    }
+    phrases <- c(intro,phrases[line:1])
+    phrases <- glue_collapse(phrases, sep = "\n")
+    
+
+    
+  ## put it together
+    return(phrases)
+    
+
+}
 ```
 
 -   factor - Lab 5 Question 2.3
@@ -231,7 +229,7 @@ avocado_major <- avocado |>
   semi_join(major_region, by = "region")
 ```
 
--   `anti_join()` Lab Question 2
+-   `anti_join()` Lab 4 Question 2
 
 ```{r wd-6-anti}
 avocado_metro <- avocado |>
@@ -240,7 +238,7 @@ avocado_metro <- avocado |>
 
 **WD-7: I can pivot dataframes from long to wide and visa versa**
 
--   `pivot_longer()` Lab 4
+-   `pivot_longer()` Lab 4 Question 7 
 
 ```{r wd-7-long}
 California |>
