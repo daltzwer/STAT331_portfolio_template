@@ -3,3 +3,23 @@ title: "Lightening Round Essays"
 format: html
 editor: visual
 ---
+
+-   Finish the sentence with another student\'s name: \"If \[Student\] doesn\'t earn an A, then nobody should, because...\" Explain your choice and your reasoning.
+
+If Sal and Kailyn doesn\'t earn an A, then nobody should, because their skills and interest clearly lies with programming and it shows in their labs. I believe both of my group mates showcased a deep understanding for most of the learning objectives we had for our class which should result in them earning an A
+
+-   What was the most difficult part of the class for you? List a general topic, a specific problem, a kind of work we did, etc. and explain why.
+
+The most difficult part of the class was finding the right combination of DPLYR verbs to accomplish a specific task. I was still learning on what each of the DPLYR verbs did, especially early in the quarter, so finding the right combination proved to be more challenging.
+
+-   What was the easiest part of the class for you? Explain why.
+
+The easiest part of the class for me was Regression and creating graphs. Since I am in Stat 324, I have had a little bit of practice with linear models and creating graphs all semester long. So, when week 9 rolled around, not only did I fully understand the concepts we were talking about but I have had plenty of practice with these two topics by this point.
+
+-   What part of the class surprised or interested you the most? Explain why.
+
+What interested me the most was definitely Regression and creating tables. I am a Quantitative Analysis concentration so these topics were closer to my major and my interest. What surprised me the most about our class is how much we were able to get done in such a short amount of time. I genuinely improved on my skills as a programmer and I still have a hard time believing how far we have come
+
+-   Give one piece of advice to a student just beginning a quarter of STAT 331 that will help them be successful in learning.
+
+One piece of advice I would give to a student just beginning a quarter of STAT 331 is to TAKE YOUR TIME. I understand just wanting to finish the preview and practice activities as fast as possible. I also understand that sometimes we have those days where we just do not have it in us to read through all the assigned readings and watch the videos; but they really do help. Take it from someone who basically did not have much coding experience, all these assignments and readings are designed to give you a deeper understanding of these concepts, take advantage of them. But just as importantly, be kind to yourself. It can get frustrating sometimes to not get the grade you want but as long as you are learning, do your best to feel good about it. This class was specifically designed with your learning in mind, so just try to have that goal in mind and the grade will come on its own.
