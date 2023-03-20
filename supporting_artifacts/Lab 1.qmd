@@ -1,0 +1,69 @@
+---
+title: "Lab 1"
+author: "Daltzwer Oliveros"
+format: 
+  html:
+    self-contained: true
+editor: visual
+execute: 
+  echo: fenced
+  error: true 
+  code-fold: true 
+---
+
+## Quarto
+
+Quarto enables you to weave together content and executable code into a finished document. To learn more about Quarto see <https://quarto.org>.
+
+## Running Code
+
+When you click the **Render** button a document will be generated that includes both content and the output of embedded code. You can embed code like this:
+
+# Car speed and stopping distances
+
+```{r}
+summary(cars)
+#cars
+
+#This dataset contains information about the speed of cars and the distances taken to stop. The data was collected in the 1920s.It has 50 rows and 2 variables
+```
+
+You can add options to executable code like this
+
+# Vapor Pressure and Temperature of Mercury
+
+```{r}
+#| fig-align: center
+#| fig-cap: "Figure 1: This dataset contains the relationship between temperature and vapor pressure of mercury"
+
+plot(pressure, main = "Mercury",
+     xlab = "Temperature (deg C)", 
+     ylab = "Pressure (mm)")
+
+```
+
+# Relationship between stopping distance and speed
+
+```{r}
+#| layout-nrow: 1
+
+dist <- cars$dist
+
+hist(dist, 
+     xlab = "Stopping Distance (ft)")
+
+plot(x = cars$speed, 
+     y = cars$dist, 
+     xlab = "Speed (mph)", 
+     ylab = "Stopping Distance (ft)")
+```
+
+#When I initially attempted our first lab, I was under the impression that echo: false displayed exactly what Dr. Theobold was expecting of us. I thought that there was a reason it was there so its best to not touch it. After meeting with Dr. Theobold during her office hours, scheduling tutoring hours, and receiving feedback from my peers, I now realize that this actually prevents it from readers being able to see my code. The second thing I did not realize was that there needs to be a space between the "\#" and the name in order to create a section header. I thought that was I was just making a comment using the "\#" and since it is at the top is why it would be called a section header. Finally, I learned the importance of properly labeling my graphs, specifically the x and y axes. It was pointed out to me that if I were to show this graph to other people without the appropriate labels, they may not know what data is being presented to them. By adding specific labels, it makes it easier to understand the graph that I have created.
+
+#Create a *bulleted* list of **two** aspects of the plots you would like to improve.
+
+-   I think the first thing I would do is add a line so we can see how strong the correlation is
+
+-   the second thing I would improve would likely be adding a little bit of color to the graph
+
+The `echo: false` option disables the printing of code (only output is displayed).
